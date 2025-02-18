@@ -1,0 +1,16 @@
+Latitude: 43.03753261309787, Longitude: -76.13284369267721
+Latitude: 43.03755997594522, Longitude: -76.13042374783802
+Download Speed: 13.26 Mbps
+Upload Speed: 12.35 Mbps
+Ping: 21.532 ms
+
+Latitude: 43.0352371463758, Longitude: -76.12394674668118
+Download Speed: 559.19 Mbps
+Upload Speed: 37.84 Mbps
+Ping: 45.039 ms
+
+Latitude: 43.03524875213141, Longitude: -76.12397114516986
+Download Speed: 90.04 Mbps
+Upload Speed: 27.50 Mbps
+Ping: 42.226 ms
+
