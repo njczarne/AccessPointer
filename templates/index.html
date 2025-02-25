@@ -3,6 +3,35 @@
 <head>
   <title>Geolocation & Speed Test</title>
   <script>
+    let uniqueId;  // Declare a variable to store the unique ID
+
+    // Function to get both location and speed test results
+    function getLocationAndSpeedTest() {
+      document.getElementById("speed-test-status").innerHTML = "Running speed test...";
+
+      // First, run the speed test
+      fetch("/speed_test")
+        .then(response => response.json())
+        .then(data => {
+          // After speed test finishes, display the results
+          document.getElementById("speed-test-status").innerHTML =
+            "Download Speed: " + data.download_speed + "<br>" +
+            "Upload Speed: " + data.upload_speed + "<br>" +
+            "Ping: " + data.ping;
+
+          // Use the same ID for location and speed test
+          uniqueId = data.id;
+
+          // Now, get the location data
+          getLocation();
+        })
+        .catch(error => {
+          console.error("Error:", error);
+          document.getElementById("speed-test-status").innerHTML = "Speed test failed.";
+        });
+    }
+
+    // Function to retrieve the user's location
     function getLocation() {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(showPosition, showError, { enableHighAccuracy: true });
@@ -11,22 +40,25 @@
       }
     }
 
+    // Display the location after fetching it
     function showPosition(position) {
       let lat = position.coords.latitude;
       let long = position.coords.longitude;
 
       document.getElementById("status").innerHTML = "Latitude: " + lat + "<br>Longitude: " + long;
 
+      // Send the location data and unique ID to the server after speed test
       fetch("/save_location", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ latitude: lat, longitude: long })
+        body: JSON.stringify({ latitude: lat, longitude: long, id: uniqueId })
       })
       .then(response => response.text())
       .then(data => console.log("Server Response:", data))
       .catch(error => console.error("Error:", error));
     }
 
+    // Handle any errors related to geolocation
     function showError(error) {
       let message = "";
       switch(error.code) {
@@ -46,21 +78,15 @@
       document.getElementById("status").innerHTML = "Error: " + message;
     }
 
-    function runSpeedTest() {
-      document.getElementById("speed-test-status").innerHTML = "Running speed test...";
-      fetch("/speed_test")
+    // On window load, generate a unique ID first, then start the process
+    window.onload = function() {
+      // Fetch the unique ID from the server before starting
+      fetch("/generate_unique_id")
         .then(response => response.json())
         .then(data => {
-          document.getElementById("speed-test-status").innerHTML =
-            "Download Speed: " + data.download_speed + "<br>" +
-            "Upload Speed: " + data.upload_speed + "<br>" +
-            "Ping: " + data.ping;
-        })
-        .catch(error => console.error("Error:", error));
-    }
-
-    window.onload = function() {
-      setTimeout(getLocation, 1000);
+          uniqueId = data.id;  // Store the unique ID received from the server
+          setTimeout(getLocationAndSpeedTest, 1000);  // Proceed with the speed test and location retrieval
+        });
     };
   </script>
 </head>
@@ -68,7 +94,7 @@
   <h1>Geolocation & Speed Test</h1>
   <p id="status">Retrieving location...</p>
 
-  <button onclick="runSpeedTest()">Run Speed Test</button>
+  <button onclick="getLocationAndSpeedTest()">Run Speed Test & Get Location</button>
   <p id="speed-test-status"></p>
 </body>
 </html>

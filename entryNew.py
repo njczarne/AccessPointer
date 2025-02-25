@@ -11,13 +11,13 @@ from myapp.models import Location
 from myapp.models import Internet
 
 def enterNewLocation(lat, long, id):
-   location = Location(latitude=lat, longitude=long, id=id)
+   location = Location(latitude=lat, longitude=long, unique_id=id)
    location.save()
 
    print("New location entry added!")
 
 def enterNewInternet(down, up, p, id):
-   internet = Internet(download=down, upload=up, ping=p, id=id)
+   internet = Internet(download=down, upload=up, ping=p, unique_id=id)
    internet.save()
 
    print("New Internet entry added!")
