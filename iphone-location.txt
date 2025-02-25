@@ -33,3 +33,10 @@ ID: 406163
 
 Latitude: 43.03779524888622, Longitude: -76.13026429526475
 ID: 406163
+Download Speed: 281.22 Mbps
+Upload Speed: 159.89 Mbps
+Ping: 8.129 ms
+ID: 566926
+
+Latitude: 43.037499901635925, Longitude: -76.1327371607249
+ID: 566926

@@ -32,7 +32,7 @@ def setup_routes(app : Flask):
             with open("iphone-location.txt", "a") as file:
                 file.write(f"Latitude: {latitude}, Longitude: {longitude}\nID: {id}\n")
                 
-            #enterNewLocation(latitude, longitude, id)
+            enterNewLocation(latitude, longitude, id)
             return "Location saved successfully!", 200
         else:
             return "Invalid data", 400
@@ -49,7 +49,7 @@ def setup_routes(app : Flask):
         upload_speed = st.upload() / 1e6
         ping = st.results.ping
 
-        #enterNewInternet(download_speed, upload_speed, ping, generated_id)
+        enterNewInternet(download_speed, upload_speed, ping, generated_id)
 
         with open("iphone-location.txt", "a") as file:
             file.write(f"Download Speed: {download_speed:.2f} Mbps\n")

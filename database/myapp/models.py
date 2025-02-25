@@ -8,7 +8,7 @@ class Location(models.Model):
     unique_id = models.IntegerField(default = 100000)
 
     def __str__(self):
-        return self.latitude + ", " + self.longitude + "\nid: " + self.unique_id
+        return self.latitude + ", " + self.longitude + f"\nid: {self.unique_id}"
 
 class Internet(models.Model):
     download = models.IntegerField()
