@@ -40,3 +40,10 @@ ID: 566926
 
 Latitude: 43.037499901635925, Longitude: -76.1327371607249
 ID: 566926
+Download Speed: 379.65 Mbps
+Upload Speed: 37.39 Mbps
+Ping: 41.439 ms
+ID: 967412
+
+Latitude: 43.03522515951727, Longitude: -76.12394929694503
+ID: 967412
