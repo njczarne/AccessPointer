@@ -7,8 +7,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), "database"))
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "database.settings")
 django.setup()
 
-from myapp.models import Location
-from myapp.models import Internet
+from myapp.models import Location, Internet
 
 def enterNewLocation(lat, long, id):
    location = Location(latitude=lat, longitude=long, unique_id=id)
