@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, jsonify
 import speedtest
 import random
 from entryNew import enterNewLocation, enterNewInternet
+from SpeedTest import run_speedtest_cli
 
 def generate_id():
     return random.randint(100000, 999999)
@@ -43,11 +44,14 @@ def setup_routes(app : Flask):
         if generated_id is None:
             generated_id = generate_id()
 
-        st = speedtest.Speedtest()
-        st.get_best_server()
-        download_speed = st.download() / 1e6
-        upload_speed = st.upload() / 1e6
-        ping = st.results.ping
+        download_speed, upload_speed, ping = run_speedtest_cli()
+
+        
+        # st = speedtest.Speedtest()
+        # st.get_best_server()
+        # download_speed = st.download() / 1e6
+        # upload_speed = st.upload() / 1e6
+        # ping = st.results.ping
 
         enterNewInternet(download_speed, upload_speed, ping, generated_id)
 
