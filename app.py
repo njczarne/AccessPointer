@@ -23,7 +23,7 @@ def listen_for_input():
 
 # Function to run Flask app in a seperate thread
 def run_flask():
-    port = 5000
+    port = 8001 # changed port number due to the default one being used by AirPlay
 
     public_url = start_ngrok(port)
 
