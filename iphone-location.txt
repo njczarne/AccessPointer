@@ -47,3 +47,24 @@ ID: 967412
 
 Latitude: 43.03522515951727, Longitude: -76.12394929694503
 ID: 967412
+Download Speed: 29.80 Mbps
+Upload Speed: 19.55 Mbps
+Ping: 62.464 ms
+ID: 349911
+
+Latitude: 43.03787989125074, Longitude: -76.13115377555474
+ID: 349911
+Download Speed: 24.86 Mbps
+Upload Speed: 20.47 Mbps
+Ping: 58.938 ms
+ID: 349446
+
+Download Speed: 24.78 Mbps
+Upload Speed: 20.48 Mbps
+Ping: 61.247 ms
+ID: 349446
+
+Latitude: 43.03728442287576, Longitude: -76.13063944042337
+ID: 349446
+Latitude: 43.03728442287576, Longitude: -76.13063944042337
+ID: 349446
