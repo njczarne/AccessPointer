@@ -1,0 +1,5 @@
+flask
+gunicorn
+pyngrok
+speedtest-cli
+django
