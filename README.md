@@ -4,6 +4,7 @@ pip install django
 
 pip install flask
 
+*** to use ngrok an account needs to be made ***
 pip install ngrok
 
 pip install pyngrok
