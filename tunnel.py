@@ -1,5 +1,10 @@
 from pyngrok import ngrok
 
-def start_ngrok(port):
-    public_url = ngrok.connect(port, "http")
-    return public_url
+class NgrokTunnel:
+    def __init__(self):
+        self.public_url = None
+    
+    # Starts an ngrok tunnel and returns the public URL
+    def start(self, port):
+        self.public_url = ngrok.connect(port, "http")
+        return self.public_url

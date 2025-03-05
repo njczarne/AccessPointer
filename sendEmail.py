@@ -1,18 +1,18 @@
 import win32com.client
 
-def send_outlook_email(recipient, subject, body, attachment_path=None):
-    try:
-        outlook = win32com.client.Dispatch("Outlook.Application")
-        mail = outlook.CreateItem(0)
+class EmailSender:
 
-        mail.To = recipient
-        mail.Subject = subject
-        mail.Body = body
-
-        mail.Send()
-        print("Email sent successfully!")
-
-    except Exception as e:
-        print(f"Error: {e}")
+    # Send an email via Outlook
+    def send_email(self, recipient, subject, body):
+        try:
+            outlook = win32com.client.Dispatch("Outlook.Application")
+            mail = outlook.Create(0)
+            mail.To = recipient
+            mail.Subject = subject
+            mail.Body = body
+            mail.send()
+            print("Email sent Successfully!")
+        except Exception as e:
+            print(f"Error sending email: {e}")
 
 
