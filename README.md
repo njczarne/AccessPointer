@@ -11,5 +11,7 @@ pip install django flask pyngrok routes
 
 pip install speedtest
 
+*** Have to run the speedtest executable file or the speedtest.exe file once on its own and say YES before running the program ***
+
 Documentation on Using Ookla Speedtest
 https://www.speedtest.net/apps/cli
