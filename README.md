@@ -11,6 +11,9 @@ pip install pyngrok
 
 pip install routes
 
-pip install speedtest 
+pip install speedtest -> changes depending on Platform
 
 *** To check what libraries are already installed use -> pip freeze ***
+
+Documentation on Using Ookla Speedtest
+https://www.speedtest.net/apps/cli
