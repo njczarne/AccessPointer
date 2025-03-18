@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, jsonify
 import random
-from SpeedTest import SpeedTestHandler
-from PullData import DatabaseHandler
+from SpeedTestHandler import SpeedTestHandler
+from DatabaseHandler import DatabaseHandler
 
 class Routes:
     def __init__(self, app: Flask):

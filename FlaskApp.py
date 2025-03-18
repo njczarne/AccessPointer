@@ -2,10 +2,10 @@ import threading
 import subprocess
 import sys
 from flask import Flask
-from routes import setup_routes
-from tunnel import NgrokTunnel
-from sendEmail import EmailSender
-from PullData import DatabaseHandler
+from Routes import setup_routes
+from NgrokTunnel import NgrokTunnel
+from EmailSender import EmailSender
+from DatabaseHandler import DatabaseHandler
 
 class FlaskApp:
     def __init__(self):

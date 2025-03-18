@@ -6,7 +6,7 @@ class EmailSender:
     def send_email(self, recipient, subject, body):
         try:
             outlook = win32com.client.Dispatch("Outlook.Application")
-            mail = outlook.Create(0)
+            mail = outlook.CreateItem(0)
             mail.To = recipient
             mail.Subject = subject
             mail.Body = body
