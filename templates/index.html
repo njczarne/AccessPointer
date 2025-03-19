@@ -3,7 +3,6 @@
 <head>
   <title>Geolocation & Speed Test</title>
   <script>
-    let uniqueId;
     let storedLatitude = null;
     let storedLongitude = null;
 
@@ -29,53 +28,61 @@
     }
 
     // ------------------------
-    // 2️⃣ Speed Test + Send stored location
+    // 2️⃣ Speed Test + Location
     // ------------------------
     function getLocationAndSpeedTest() {
       document.getElementById("speed-test-status").innerHTML = "Running speed test...";
 
-      fetch("/speed_test")
+      // First, get a fresh unique ID
+      fetch("/generate_unique_id")
         .then(response => response.json())
         .then(data => {
-          document.getElementById("speed-test-status").innerHTML =
-            "Download Speed: " + data.download_speed + "<br>" +
-            "Upload Speed: " + data.upload_speed + "<br>" +
-            "Ping: " + data.ping;
+          let uniqueId = data.id;
+          console.log("Generated unique ID:", uniqueId);
 
-          uniqueId = data.id;
+          // Now, run speed test
+          fetch("/speed_test")
+            .then(response => response.json())
+            .then(testData => {
+              document.getElementById("speed-test-status").innerHTML =
+                "Download Speed: " + testData.download_speed + "<br>" +
+                "Upload Speed: " + testData.upload_speed + "<br>" +
+                "Ping: " + testData.ping;
 
-          // Immediately fetch real-time location after speed test
-          navigator.geolocation.getCurrentPosition(
-            (position) => {
-              const lat = position.coords.latitude;
-              const long = position.coords.longitude;
+              // After speed test, get real-time location
+              navigator.geolocation.getCurrentPosition(
+                (position) => {
+                  const lat = position.coords.latitude;
+                  const long = position.coords.longitude;
 
-              document.getElementById("status").innerHTML = "Latitude: " + lat + "<br>Longitude: " + long;
+                  document.getElementById("status").innerHTML = "Latitude: " + lat + "<br>Longitude: " + long;
 
-              // Send to /save_location with unique ID (same as before)
-              fetch("/save_location", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ latitude: lat, longitude: long, id: uniqueId })
-              })
-              .then(response => response.text())
-              .then(data => console.log("Server Response:", data))
-              .catch(error => console.error("Error:", error));
-            },
-            (error) => {
-              showError(error);
-            },
-            { enableHighAccuracy: true }
-          );
+                  // Send to /save_location with fresh unique ID
+                  fetch("/save_location", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ latitude: lat, longitude: long, id: uniqueId })
+                  })
+                  .then(response => response.text())
+                  .then(data => console.log("Server Response:", data))
+                  .catch(error => console.error("Error:", error));
+                },
+                (error) => {
+                  showError(error);
+                },
+                { enableHighAccuracy: true }
+              );
+            })
+            .catch(error => {
+              console.error("Error running speed test:", error);
+              document.getElementById("speed-test-status").innerHTML = "Speed test failed.";
+            });
         })
-        .catch(error => {
-          console.error("Error:", error);
-          document.getElementById("speed-test-status").innerHTML = "Speed test failed.";
-        });
+        .catch(error => console.error("Error generating unique ID:", error));
     }
 
     // ------------------------
-    // 3️⃣ Real-time location every 5 seconds (separate feature)
+    // 3️⃣ Real-time location every 10 seconds (separate)
     // ------------------------
     function startRealTimeLocationUpdates() {
       if (navigator.geolocation) {
@@ -87,7 +94,7 @@
 
               console.log("Real-time location:", latitude, longitude);
 
-              // Send to /save_user_location (no unique ID, no speed test link)
+              // Send to /save_user_location (no unique ID)
               fetch("/save_user_location", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -108,6 +115,16 @@
       } else {
         console.error("Geolocation not supported.");
       }
+    }
+
+    // ------------------------
+    // 4️⃣ Background Speed Test + Location every 1 minute
+    // ------------------------
+    function startBackgroundSpeedTest() {
+      setInterval(() => {
+        console.log("Running background speed test...");
+        getLocationAndSpeedTest(); // Reuse same function
+      }, 60000); // Every 60 seconds
     }
 
     // ------------------------
@@ -136,14 +153,9 @@
     // On page load
     // ------------------------
     window.onload = function() {
-      fetch("/generate_unique_id")
-        .then(response => response.json())
-        .then(data => {
-          uniqueId = data.id;
-          requestAndStoreLocation();      // Request initial location permission
-          startRealTimeLocationUpdates(); // Start automatic real-time updates
-        })
-        .catch(error => console.error("Error generating unique ID:", error));
+      requestAndStoreLocation();      // Request location permission
+      startRealTimeLocationUpdates(); // Start real-time location updates
+      startBackgroundSpeedTest();     // Start background speed tests every minute
     };
   </script>
 </head>
