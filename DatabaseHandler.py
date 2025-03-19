@@ -65,7 +65,10 @@ class DatabaseHandler:
         for unique_id, info in data.items():
             print(f"Unique ID: {unique_id}")
             print(f"Internet Data: {info['download']} download, {info['upload']} upload, {info['ping']} ping")
-            print(f"Location Data: Latitude: {info['location']['latitude']}, Longitude: {info['location']['longitude']}")
+            if info.get('location') is not None:
+                print(f"Location Data: Latitude: {info['location']['latitude']}, Longitude: {info['location']['longitude']}")
+            else:
+                print("Location Data: Not yet received")
             print("-" * 40)
 
 

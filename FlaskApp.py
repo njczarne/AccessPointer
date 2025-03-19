@@ -1,8 +1,6 @@
 import threading
-import subprocess
-import sys
 from flask import Flask
-from Routes import setup_routes
+from Routes import Routes
 from NgrokTunnel import NgrokTunnel
 from EmailSender import EmailSender
 from DatabaseHandler import DatabaseHandler
@@ -12,7 +10,7 @@ class FlaskApp:
         self.app = Flask(__name__)
         self.tunnel = NgrokTunnel()
         self.sender = EmailSender()
-        setup_routes(self.app)
+        self.routes = Routes(self.app)
 
     def run(self):
         port = 5000
@@ -26,9 +24,15 @@ class FlaskApp:
 
     def listen_for_input(self):
         while True:
-            user_input = input("Press 1 to print current data: ")
+            user_input = input("Press 1 to print current data, Press 2 to print current location: ")
             if user_input == '1':
                 DatabaseHandler().print_data()
+            elif user_input == '2':
+                latitude, longitude = self.routes.get_user_location()
+                if latitude is not None and longitude is not None:
+                    print(f"Current Location -> Latitude: {latitude}, Longitude: {longitude}")
+                else:
+                    print("Location data not available")
             else:
                 print("Invalid input")
 
