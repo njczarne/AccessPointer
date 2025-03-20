@@ -1,0 +1,103 @@
+import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib.image as mpimg
+import matplotlib.animation as animation
+from matplotlib.backend_bases import KeyEvent
+from scipy.interpolate import griddata
+import random
+
+plt.rcParams['keymap.save'] = []  # Disable 's' for saving
+
+# List of floor plan images (replace with actual paths)
+images = [
+    "Floor1.png",
+    "Floor2.png",
+]
+
+# Load image function
+def load_image(image_path):
+    return mpimg.imread(image_path)
+
+# Initial setup
+current_image_index = 0
+terrain_map = load_image(images[current_image_index])
+print("Terrain map loaded.")
+
+# User position
+user_x, user_y = 5, 5  # Starting position
+step_size = 0.5  # Movement step
+
+# Set up the figure
+fig, ax = plt.subplots(figsize=(8, 6))
+terrain_display = ax.imshow(terrain_map, extent=[0, 10, 0, 10], aspect='auto')
+
+# Sample WiFi speed data (random values for now, replace with real data)
+wifi_data_points = np.array([
+    [0, 2, 50],  # (x, y, speed in Mbps)
+    [4, 6, 20],
+    [6, 2, 200],
+    [8, 8, 10],
+    [7, 5, 75],
+    [10, 2, 40]
+])
+
+# Function to generate heatmap based on WiFi speeds
+def generate_heatmap_data():
+    """ Generate interpolated WiFi speed heatmap """
+    X, Y = np.meshgrid(np.linspace(0, 10, 100), np.linspace(0, 10, 100))
+   # speeds = griddata(wifi_data_points[:, :2], wifi_data_points[:, 2], (X, Y), method='cubic', fill_value=0)
+    speeds = np.random.uniform(10,500, X.shape)
+    return speeds
+
+# Generate initial heatmap data
+heatmap_data = generate_heatmap_data()
+
+# Overlay heatmap
+heatmap = ax.imshow(heatmap_data, cmap="coolwarm", alpha=0.5, extent=[0, 10, 0, 10], interpolation='bilinear', vmin=0, vmax=500)
+
+# Colorbar
+cbar = plt.colorbar(heatmap, ax=ax, label="WiFi Speed (Mbps)")
+
+# Function to update the heatmap dynamically
+def update(frame):
+    """ Updates the heatmap visualization """
+    heatmap.set_data(generate_heatmap_data())  # Update heatmap based on latest data
+    return terrain_display, heatmap
+
+# Handle key presses for movement & floor switching
+def on_key(event: KeyEvent):
+    global current_image_index, terrain_map, terrain_display, user_x, user_y
+
+    # Floor Navigation
+    if event.key == 'up':  
+        current_image_index = (current_image_index + 1) % len(images)
+    elif event.key == 'down':  
+        current_image_index = (current_image_index - 1) % len(images)
+
+    # Movement Controls
+    elif event.key == 'w':  # Up
+        user_y = min(user_y + step_size, 10)
+    elif event.key == 's':  # Down
+        user_y = max(user_y - step_size, 0)
+    elif event.key == 'a':  # Left
+        user_x = max(user_x - step_size, 0)
+    elif event.key == 'd':  # Right
+        user_x = min(user_x + step_size, 10)
+
+    # Load new floor if switched
+    terrain_map = load_image(images[current_image_index])  
+    terrain_display.set_data(terrain_map)
+
+    # Update title with position
+    ax.set_title(f"Floor {current_image_index + 1} - WiFi Heatmap (Position: {user_x:.1f}, {user_y:.1f})")
+    plt.draw()
+
+# Connect key press event
+fig.canvas.mpl_connect('key_press_event', on_key)
+
+# Animate heatmap
+ani = animation.FuncAnimation(fig, update, interval=1000)
+
+# Show plot
+plt.show()
+print("Live WiFi Heatmap Running with Movement & Floor Navigation...")
